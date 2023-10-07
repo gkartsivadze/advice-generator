@@ -1,20 +1,26 @@
-import { useEffect, useState } from "react"
-import { IconDice, PatternDividerDesktop} from "./assets";
+import { useEffect, useRef, useState } from "react"
+import { IconDice, PatternDividerDesktop } from "./assets";
 import patternDividerMobile from "./assets/PatternDividerMobile.svg"
 import useFetch from "./hooks/useFetch";
 import useResize from "./hooks/useResize";
 
 function App() {
   const [adviceData, setAdviceData] = useState();
+  const [buttonDisabled, setButtonDisabled] = useState(true);
   const currentWidth = useResize();
 
   useEffect(() => {
     fetchNewRandomQuote()
   }, [])
-  
+
   function fetchNewRandomQuote() {
-    useFetch("https://api.adviceslip.com/advice", setAdviceData)
+    useFetch("https://api.adviceslip.com/advice", setAdviceData);
+    setButtonDisabled(true);
   }
+
+  useEffect(() => {
+    setButtonDisabled(false);
+  }, [adviceData])
 
   return (
     <main
@@ -27,12 +33,13 @@ function App() {
         </h1>
         {
           currentWidth > 600
-          ?<PatternDividerDesktop className="h-10" />
-          :<img src={patternDividerMobile} className="h-10" />
+            ? <PatternDividerDesktop className="h-10" />
+            : <img src={patternDividerMobile} className="h-10" />
         }
         <button
-          className="bg-neon-green rounded-full p-4 absolute bottom-0 translate-y-1/2 transition-[0.5s] hover:scale-110 active:scale-95"
           onClick={fetchNewRandomQuote}
+          disabled={buttonDisabled}
+          className="bg-neon-green disabled:scale-0 rounded-full p-4 absolute bottom-0 translate-y-1/2 transition-[0.5s] hover:scale-110 active:scale-95"
         >
           <IconDice />
         </button>
