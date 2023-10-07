@@ -1,12 +1,13 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 export default function useResize() {
-    let width = window.innerWidth;
+    var [width, setWidth] = useState(window.innerWidth);
 
     useEffect(() => {
-        document.addEventListener("resize", () => {
-            width = window.innerWidth;
-            console.log(width);
+        window.addEventListener("resize", () => {
+            setWidth(window.innerWidth);
         });
     }, [])
+    
+    return width;
 };
